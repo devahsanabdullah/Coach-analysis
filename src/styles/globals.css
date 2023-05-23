@@ -15,12 +15,28 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
   body {
-    color: white;
-    background: black;
+    color: 'black';
+    background: 'white';
   }
-}
+} */
+
+
+  @font-face {
+    font-family: 'heading-bold';
+    src:url('../font/Heading-Pro-Bold-trial.ttf');
+    /* src: url('https://use.typekit.net/af/54ce76/00000000000000007735a154/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3'); */
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'heading-book';
+    src:url('../font/Heading-Pro-Book-trial.ttf');
+    /* src: url('https://use.typekit.net/af/54ce76/00000000000000007735a154/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3'); */
+    font-weight: normal;
+    font-style: normal;
+  }

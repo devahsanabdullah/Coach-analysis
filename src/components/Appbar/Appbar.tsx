@@ -3,7 +3,7 @@ import BackIcon from '../icon/BackIcon'
 
 const Appbar = () => {
   return (
-    <div className="mt-10 w-full flex justify-between items-center text-[#2c5c92]">
+    <div className="mt-10 w-full flex justify-between items-center font-headingBook text-[#2c5c92]">
       <BackIcon />
       <div className="flex">
         <h1>Home</h1>

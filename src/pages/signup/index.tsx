@@ -6,31 +6,31 @@ import LineIcon from '@/components/icon/LineIcon'
 import TwitterIcon from '@/components/icon/TwitterIcon'
 import FacebookIcon from '@/components/icon/FacebookIcon'
 import GoogleIcon from '@/components/icon/GoogleIcon'
-import { Registationvalidation } from '@/components/Validation/RegistationValidation'
+// import { Registationvalidation } from '@/components/Validation/RegistationValidation'
 import { Formik, Field, ErrorMessage, Form } from 'formik'
 import { useRouter } from 'next/router'
 const Login = () => {
   const Router = useRouter()
   const styleed =
-    'bg-[#ebf0f5] border-none h-12 text-gray-500 text-md rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
+    'bg-[#ebf0f5] border-none h-12 text-gray-500 placeholder:font-headingBook text-md rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
   const initialValues = {
     fullname: '',
     email: '',
     address: '',
     password: ''
   }
-  const handleSubmit = (values: any) => {
-    alert(JSON.stringify(values, null, 2))
-    Router.push('/sigin')
-  }
+  // const handleSubmit = (values: any) => {
+  //   alert(JSON.stringify(values, null, 2))
+  //   Router.push('/sigin')
+  // }
   return (
     <div className="flex w-full">
       <HeroComponent name="Sign Up !" />
       <div className="flex flex-col items-center md:w-2/3 w-full  pb-5 overflow-y-auto ml-auto ">
         <Appbar />
         <div className="my-5 text-center">
-          <h1 className="text-3xl font-bold">Let's Get Started</h1>
-          <h1 className="text-xl my-2">Create an Account</h1>
+          <h1 className="text-4xl font-headingBold">Let's Get Started</h1>
+          <h1 className="text-2xl font-headingBook my-2">Create an Account</h1>
         </div>
         <div>
           <LineIcon />
@@ -44,11 +44,17 @@ const Login = () => {
         {/* <div  className='w-full flex flex-col items-center justify-center'> */}
         <Formik
           initialValues={initialValues}
-          validationSchema={Registationvalidation}
-          onSubmit={handleSubmit}
+          //  validationSchema={Registationvalidation}
+          onSubmit={(values, actions) => {
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 2))
+              actions.setSubmitting(false)
+            }, 1000)
+            Router.push('/signin')
+          }}
         >
-          {({ handleSubmit }) => (
-            <Form onSubmit={handleSubmit}>
+          {() => (
+            <Form>
               <div className="">
                 <Field
                   type="text"
@@ -106,7 +112,15 @@ const Login = () => {
                 />
               </div>
 
-              <Button onClick={() => handleSubmit}>Sign Up</Button>
+              <Button
+                style={{
+                  backgroundImage:
+                    'linear-gradient(to right, #00FEDE, #00FDDF, #00CCFB)'
+                }}
+                type="submit"
+              >
+                Sign Up
+              </Button>
             </Form>
           )}
         </Formik>

@@ -2,7 +2,7 @@ import HeroComponent from '@/components/HeroComponet/HeroComponent'
 import Appbar from '@/components/Appbar/Appbar'
 import React, { useState } from 'react'
 import { Button } from '@/components/twin'
-import { PaymentvalidationSchema } from '@/components/Validation/PaymentValidation'
+// import { PaymentvalidationSchema } from '@/components/Validation/PaymentValidation'
 import { Formik, Field, ErrorMessage, Form } from 'formik'
 import { useRouter } from 'next/router'
 const Payment = () => {
@@ -10,24 +10,21 @@ const Payment = () => {
   const [paypal, setPaypal] = useState(false)
   const Router = useRouter()
   const styleed =
-    'bg-[#ebf0f5] border-none h-12 text-gray-500 text-md rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
+    'bg-[#ebf0f5] border-none h-12 text-gray-500 text-lg placeholder:font-headingBook  rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
   const initialValues = {
     name: '',
     cardNumber: '',
     month: '',
     cvv: ''
   }
-  const handleSubmit = (values: any) => {
-    alert(JSON.stringify(values, null, 2))
-    Router.push('/sigin')
-  }
+
   return (
     <div className="flex w-full">
       <HeroComponent name="Payment" />
       <div className="flex flex-col items-center md:w-2/3 w-full  pb-5 overflow-y-auto ml-auto ">
         <Appbar />
         <div className="my-5 text-center">
-          <h1 className="text-3xl ">
+          <h1 className="text-4xl font-headingBook ">
             Please Fill in your payment details below
           </h1>
         </div>
@@ -43,7 +40,9 @@ const Payment = () => {
                 id=""
               />
             </div>
-            <h1 className="text-xl ml-2">Credit Card or Debit Card</h1>
+            <h1 className="text-xl font-headingBold ml-2">
+              Credit Card or Debit Card
+            </h1>
           </div>
           <div className="flex mx-2 items-center justify-center">
             <div className="bg-[#f7f7f7] shadow-2xl  w-5  cursor-pointer rounded-full items-center justify-center flex  h-5 ">
@@ -63,8 +62,14 @@ const Payment = () => {
         {/* <div  className='w-full flex flex-col items-center justify-center'> */}
         <Formik
           initialValues={initialValues}
-          validationSchema={PaymentvalidationSchema}
-          onSubmit={handleSubmit}
+          // validationSchema={PaymentvalidationSchema}
+          onSubmit={(values, actions) => {
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 2))
+              actions.setSubmitting(false)
+            }, 1000)
+            Router.push('/signup')
+          }}
         >
           {({ handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
@@ -125,7 +130,15 @@ const Payment = () => {
                 />
               </div>
 
-              <Button onClick={() => handleSubmit}>pay $239</Button>
+              <Button
+                style={{
+                  backgroundImage:
+                    'linear-gradient(to right, #00FEDE, #00FDDF, #00CCFB)'
+                }}
+                type="submit"
+              >
+                pay $239
+              </Button>
             </Form>
           )}
         </Formik>

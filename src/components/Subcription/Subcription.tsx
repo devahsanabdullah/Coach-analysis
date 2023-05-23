@@ -3,13 +3,14 @@ import SelectionMenu from '../Dropdown/NewDrop'
 import TickIcon from '../icon/TickIcon'
 import { Button } from '@/components/twin'
 import { useRouter } from 'next/router'
+
 const Subcription = () => {
   const [coachChecked, setCoachChecked] = useState(true)
   const [groupChecked, setGroupChecked] = useState(false)
   const [feature, setFeature] = useState(false)
   const Router = useRouter()
   const styleed =
-    'bg-[#ebf0f5] border-none h-12 text-gray-500 text-md rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
+    'bg-[#ebf0f5] border-none h-12 text-gray-500 placeholder:font-headingBook text-md rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
   const benifit = [
     'Coach Review',
     'tracking and reporting',
@@ -28,13 +29,13 @@ const Subcription = () => {
   }
   return (
     <div className="flex flex-col items-center md:w-2/3 w-full  pb-5 overflow-y-auto ml-auto ">
-      <div className="flex mt-10  text-[#2c5c92]">
+      <div className="flex mt-10 font-headingBook text-[#2c5c92]">
         <h1>Home</h1>
         <div className=" border-r  h-5 mx-2 mt-1  border-black "></div>
         <h1>How its work</h1>
       </div>
-      <h1 className="text-4xl font-extrabold mt-6">Subcription</h1>
-      <p className="my-5 text-2xl text-gray-600  font-serif">
+      <h1 className="text-5xl font-headingBold mt-6">Subcription</h1>
+      <p className="my-5 text-3xl text-gray-600  font-headingBook">
         Choose a Subcription Plan{' '}
       </p>
       <div className="flex ">
@@ -49,7 +50,7 @@ const Subcription = () => {
               id=""
             />
           </div>
-          <h1 className="text-xl  font-bold">Individual Coach</h1>
+          <h1 className="text-2xl  font-headingBold">Individual Coach</h1>
         </div>
         <div className="flex mx-2 items-center justify-center">
           <div className="bg-[#f7f7f7] shadow-2xl  w-5  cursor-pointer rounded-full items-center justify-center flex  h-5 ">
@@ -62,7 +63,7 @@ const Subcription = () => {
               id=""
             />
           </div>
-          <h1 className="text-xl  font-bold">Group/Club</h1>
+          <h1 className="text-2xl  font-headingBold">Group/Club</h1>
         </div>
       </div>
 
@@ -70,9 +71,11 @@ const Subcription = () => {
 
       <div className="flex w-1/2 mt-4 text-[#2C5C92]">
         <h1 className="text-4xl font-extrabold items-start ">
-          {feature ? '$239' : '140'}
+          {feature ? '$239' : '$140'}
         </h1>
-        <p className="text-lg  flex justify-end items-end">/month</p>
+        <p className="text-lg  flex justify-end font-headingBook items-end">
+          /month
+        </p>
       </div>
       {groupChecked && (
         <div className="w-full items-center flex  flex-col justify-center">
@@ -87,7 +90,9 @@ const Subcription = () => {
               return (
                 <div className="flex  mt-2">
                   <TickIcon />
-                  <h1 className="text-gray-500 text-md ml-2">{item}</h1>
+                  <h1 className="text-gray-500 text-lg font-headingBook ml-2">
+                    {item}
+                  </h1>
                 </div>
               )
             })}
@@ -98,7 +103,9 @@ const Subcription = () => {
               return (
                 <div className="flex  mt-2">
                   <TickIcon />
-                  <h1 className="text-gray-500 text-md ml-2">{item}</h1>
+                  <h1 className="text-gray-500 text-lg font-headingBook ml-2">
+                    {item}
+                  </h1>
                 </div>
               )
             })}
@@ -111,21 +118,21 @@ const Subcription = () => {
           feature
             ? 'text-[#2C5C92] bg-[#F3F6F9] border-[#2C5C92] border-2'
             : 'bg-[#f2f2f2] text-gray-500'
-        } w-auto cursor-pointer  p-4  h-auto rounded-md`}
+        } w-1/2 cursor-pointer  p-5  h-auto rounded-md`}
       >
-        <div className="flex justify-between">
-          <h1>Addition Feature</h1>
-          <h1 className="text-lg font-bold">$99</h1>
+        <div className="flex justify-between ">
+          <h1 className="font-headingBook">Addition Feature</h1>
+          <h1 className="text-lg font-bold ">$99</h1>
         </div>
-        <div className="flex mt-2  justify-between">
+        <div className="flex mt-2  justify-between font-headingBook">
           <p>- Lorem ipsum dolor sit amet</p>
           <p className="pl-3">- Lorem ipsum dolor sit amet</p>
         </div>
-        <div className="flex  mt-2 justify-between">
+        <div className="flex  mt-2 justify-between font-headingBook">
           <p>- Consectetur adipiscing elit</p>
           <p className="pl-2">- Consectetur adipiscing elit</p>
         </div>
-        <div className="flex mt-2  justify-between">
+        <div className="flex mt-2  justify-between font-headingBook">
           <p>- Sed do eiusmod tempor</p>
           <p className="pl-2"> - Lorem ipsum dolor sit amet</p>
         </div>
