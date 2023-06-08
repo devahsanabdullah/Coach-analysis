@@ -17,7 +17,7 @@ const ResetPassword = () => {
     <div className="flex w-full">
       <HeroComponent name="Forgot Password" />
       <div className="flex flex-col items-center md:w-2/3 w-full  pb-5 overflow-y-auto ml-auto ">
-        <Appbar />
+        <Appbar route="/" />
         <div className="my-5 text-center">
           <h1 className="text-4xl font-headingBold">Reset Password</h1>
         </div>

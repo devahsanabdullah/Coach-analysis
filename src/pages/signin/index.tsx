@@ -2,10 +2,12 @@ import HeroComponent from '@/components/HeroComponet/HeroComponent'
 import Appbar from '@/components/Appbar/Appbar'
 import React from 'react'
 import { Button } from '@/components/twin'
-import LineIcon from '@/components/icon/LineIcon'
-import TwitterIcon from '@/components/icon/TwitterIcon'
-import FacebookIcon from '@/components/icon/FacebookIcon'
-import GoogleIcon from '@/components/icon/GoogleIcon'
+// import LineIcon from '@/components/icon/LineIcon'
+// import TwitterIcon from '@/components/icon/TwitterIcon'
+// import FacebookIcon from '@/components/icon/FacebookIcon'
+// import GoogleIcon from '@/components/icon/GoogleIcon'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 // import { Registationvalidation } from '@/components/Validation/RegistationValidation'
 import { Formik, Field, ErrorMessage, Form } from 'formik'
 import { useRouter } from 'next/router'
@@ -22,31 +24,43 @@ const SignIn = () => {
     <div className="flex w-full">
       <HeroComponent name="Sign In !" />
       <div className="flex flex-col items-center md:w-2/3 w-full  pb-5 overflow-y-auto ml-auto ">
-        <Appbar />
+        <Appbar route={'/'} />
         <div className="my-5 text-center">
           <h1 className="text-4xl font-headingBold">Welcome Back!</h1>
           <h1 className="text-xl font-headingBook my-2">
             To stay connected with us please login with your personal info
           </h1>
         </div>
-        <div>
+        {/* <div>
           <LineIcon />
           <div className="flex  justify-between mt-5">
             <FacebookIcon />
             <TwitterIcon />
             <GoogleIcon />
           </div>
-        </div>
+        </div> */}
         {/* <div  className='w-full flex flex-col items-center justify-center'> */}
         <Formik
           initialValues={initialValues}
           // validationSchema={Registationvalidation}
-          onSubmit={(values, actions) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
-              actions.setSubmitting(false)
-            }, 1000)
-            Router.push('/forgot-password')
+          onSubmit={(values) => {
+            axios
+              .post(
+                'https://veo.api.almerajgroups.com/api/coaches/login',
+                values
+              )
+              .then((response: any) => {
+                toast.success('success Login')
+                console.log(response)
+                // Router.push('/checkout')
+              })
+              .catch((error: any) => {
+                if (error.response.status === 404) {
+                  toast.error(error.response.data.message)
+                }
+              })
+            console.log(values, 'sign in ')
+            // Router.push('/forgot-password')
           }}
         >
           {({ handleSubmit }) => (

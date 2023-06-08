@@ -5,6 +5,9 @@ import { Button } from '@/components/twin'
 // import { Registationvalidation } from '@/components/Validation/RegistationValidation'
 import { Formik, Field, ErrorMessage, Form } from 'formik'
 import { useRouter } from 'next/router'
+import axios from 'axios'
+import * as Yup from 'yup'
+import { setEmailVerify } from '@/services/action/action'
 const ForgotPassword = () => {
   const Router = useRouter()
   const styleed =
@@ -12,12 +15,16 @@ const ForgotPassword = () => {
   const initialValues = {
     email: ''
   }
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required')
+    // Add other form field validations here
+  })
 
   return (
     <div className="flex w-full">
       <HeroComponent name="Forgot Password" />
       <div className="flex flex-col items-center md:w-2/3 w-full  pb-5 overflow-y-auto ml-auto ">
-        <Appbar />
+        <Appbar route="/" />
         <div className="my-5 text-center">
           <h1 className="text-4xl font-headingBold">Forgot Your Password?</h1>
           <h1 className="text-xl font-sans my-2">
@@ -28,13 +35,28 @@ const ForgotPassword = () => {
         {/* <div  className='w-full flex flex-col items-center justify-center'> */}
         <Formik
           initialValues={initialValues}
-          // validationSchema={Registationvalidation}
-          onSubmit={(values, actions) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
-              actions.setSubmitting(false)
-            }, 1000)
-            Router.push('/verification')
+          validationSchema={validationSchema}
+          onSubmit={(values, { setFieldError }) => {
+            setEmailVerify(values)
+            axios
+              .post(
+                'https://veo.api.almerajgroups.com/api/coaches/password/request',
+                values
+              )
+              .then((response) => {
+                Router.push('/verification')
+                setEmailVerify({ values })
+                console.log(response)
+              })
+              .catch((error) => {
+                if (error.response && error.response.data) {
+                  setFieldError('email', error.response.data.message)
+                } else {
+                  console.error(error)
+                }
+              })
+            setEmailVerify({ values })
+            // Router.push('/verification')
           }}
         >
           {({ handleSubmit }) => (
@@ -50,7 +72,7 @@ const ForgotPassword = () => {
                 <ErrorMessage
                   name="email"
                   component="div"
-                  className="error text-red-500 pl-5 pt-3"
+                  className="error text-red-500 text-sm mt-1 font-serif"
                 />
               </div>
 

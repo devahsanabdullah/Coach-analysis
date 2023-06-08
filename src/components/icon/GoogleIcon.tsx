@@ -2,57 +2,17 @@ import React from 'react'
 
 const GoogleIcon = () => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="58"
-      height="58"
-      fill="none"
-      viewBox="0 0 58 58"
-    >
-      <g filter="url(#filter0_d_0_1)">
-        <path
-          fill="#fff"
-          d="M54 25c0 13.807-11.193 25-25 25S4 38.807 4 25 15.193 0 29 0s25 11.193 25 25z"
-        ></path>
-      </g>
-      <path
-        fill="#385C8E"
-        fillRule="evenodd"
-        d="M38.7 22.413v-3.76h-2.3v3.76h-2.3v3.762h2.3v3.76h2.3v-3.76H41v-3.762h-2.3zm-6.44 0c.062 0 .115 1.64.115 2.428 0 6.852-2.808 12.159-7.041 12.159C21.28 37 18 31.631 18 25.003 18 18.373 21.28 13 25.334 13c1.98 0 3.636 1.162 4.913 3.116l-1.99 3.097c-.544-.858-1.499-1.928-2.923-1.928-2.504 0-4.547 3.237-4.547 7.417s2.043 7.264 4.547 7.264c2.902 0 3.992-3.91 4.16-5.791H24.9v-3.762h7.36z"
-        clipRule="evenodd"
-      ></path>
-      <defs>
-        <filter
-          id="filter0_d_0_1"
-          width="58"
-          height="58"
-          x="0"
-          y="0"
-          colorInterpolationFilters="sRGB"
-          filterUnits="userSpaceOnUse"
-        >
-          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
-          <feColorMatrix
-            in="SourceAlpha"
-            result="hardAlpha"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-          ></feColorMatrix>
-          <feOffset dy="4"></feOffset>
-          <feGaussianBlur stdDeviation="2"></feGaussianBlur>
-          <feComposite in2="hardAlpha" operator="out"></feComposite>
-          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_0_1"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_0_1"
-            result="shape"
-          ></feBlend>
-        </filter>
-      </defs>
-    </svg>
+    <div className="flex justify-center items-center bg-white shadow-md rounded-full px-2 py-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="40"
+        height="40"
+        viewBox="0 0 24 24"
+        fill="#2c5c92"
+      >
+        <path d="M14.969 11.814l.001.146a8.015 8.015 0 01-.929 3.757l.021-.044a6.588 6.588 0 01-2.55 2.632l-.032.017a7.55 7.55 0 01-3.851.951h.008-.022a7.457 7.457 0 01-2.995-.623l.048.019a7.515 7.515 0 01-4.044-4.013l-.018-.049c-.382-.876-.604-1.896-.604-2.969S.224 9.545.625 8.62l-.019.049a7.515 7.515 0 014.013-4.044l.049-.018a7.365 7.365 0 012.951-.606h.018-.001L7.761 4c1.937 0 3.695.762 4.992 2.004l-.003-.003-2.073 1.99a4.187 4.187 0 00-3.046-1.177h.006-.031c-.864 0-1.671.24-2.36.657l.02-.011a4.865 4.865 0 00-.022 8.342l.022.012a4.508 4.508 0 002.339.646h.033-.002.052c.549 0 1.077-.088 1.572-.25l-.036.01a4.044 4.044 0 001.204-.607l-.011.008a4.39 4.39 0 00.81-.807l.008-.01c.198-.25.369-.535.5-.841l.009-.024c.093-.22.17-.478.22-.746l.004-.024H7.634v-2.625h7.208c.078.382.124.821.126 1.27v.002zM24 10.541v2.189h-2.177v2.177h-2.189V12.73H17.46v-2.189h2.177V8.364h2.189v2.177z"></path>
+      </svg>
+    </div>
   )
 }
 

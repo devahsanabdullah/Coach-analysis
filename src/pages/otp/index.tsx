@@ -1,9 +1,9 @@
 import HeroComponent from '@/components/HeroComponet/HeroComponent'
 import Appbar from '@/components/Appbar/Appbar'
 import React from 'react'
-import OTP from '@/components/Otp/Otp'
+import ResendOtp from '@/components/Otp/Otp'
 
-const Verification = () => {
+const ResendEmail = () => {
   return (
     <div className="flex w-full">
       <HeroComponent name="OTP Verify" />
@@ -15,11 +15,11 @@ const Verification = () => {
           </h1>
         </div>
         <div className="w-full flex flex-col justify-center items-center">
-          <OTP />
+          <ResendOtp />
         </div>
       </div>
     </div>
   )
 }
 
-export default Verification
+export default ResendEmail

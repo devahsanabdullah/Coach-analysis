@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import DropIcon from '../icon/DropIcon'
 
-const SelectionMenu = () => {
+const SelectionMenu = ({}) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
 
