@@ -71,12 +71,12 @@ export default function MonthDropdown({
           <Menu.Items
             className={'absolute z-50 text-lg text-gray-400  w-full '}
           >
-            <div className=" !bg-white right-0 mt-2   origin-top-center  shadow-sm border">
+            <div className=" !bg-white right-0 mt-2  overflow-y-auto h-[18vh]  origin-top-center  shadow-sm border">
               {months &&
                 months.map((items: any, index: number) => {
                   return (
                     <Menu.Item as={Fragment} key={index}>
-                      <div className="hover:bg-secondary-light">
+                      <div className="hover:bg-gray-300">
                         <div
                           onClick={() => handleChange(items.value)}
                           className="flex cursor-pointer  py-3 ml-3 items-center"

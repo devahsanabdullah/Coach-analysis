@@ -1,7 +1,8 @@
 import React from 'react'
 import Image from 'next/image'
-
+import { useRouter } from 'next/router'
 const SideApp = () => {
+  const Router = useRouter()
   return (
     <div className="hidden md:block ">
       <div className="bg-[#2C5C92] flex   h-screen   fixed left-0  w-1/3 text-white">
@@ -25,7 +26,10 @@ const SideApp = () => {
           <p className="text-lg font-headingBook">
             Please login with your personal info
           </p>
-          <button className="  w-52 border mt-10 text-xl font-headingBook border-white rounded-md h-10">
+          <button
+            onClick={() => Router.push('/signin')}
+            className="  w-52 border mt-10 text-xl font-headingBook border-white rounded-md h-10"
+          >
             Sign In
           </button>
         </div>

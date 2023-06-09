@@ -12,10 +12,13 @@ function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
   useEffect(() => {
     // Check if user info exists in local storage
-    const userInfo = localStorage.getItem('Usertoken')
-
-    if (!userInfo) {
-      // If user info does not exist, redirect to the login page
+    const userInfo: any = localStorage.getItem('userData')
+    let obj = JSON.parse(userInfo)
+    if (obj?.is_verified === true) {
+      router.push('/verification')
+    } else if (obj?.is_verified === true && obj?.is_subscribed === true) {
+      router.push('/signin')
+    } else {
       router.push('/')
     }
   }, [])

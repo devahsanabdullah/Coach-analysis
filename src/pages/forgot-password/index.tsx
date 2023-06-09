@@ -4,12 +4,15 @@ import React from 'react'
 import { Button } from '@/components/twin'
 // import { Registationvalidation } from '@/components/Validation/RegistationValidation'
 import { Formik, Field, ErrorMessage, Form } from 'formik'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import axios from 'axios'
 import * as Yup from 'yup'
 import { setEmailVerify } from '@/services/action/action'
+import LoaderIcon from '@/components/icon/LoaderIcon'
+import { useState } from 'react'
 const ForgotPassword = () => {
-  const Router = useRouter()
+  const [verify, setVerify] = useState(false)
+  // const Router = useRouter()
   const styleed =
     'bg-[#ebf0f5] border-none h-12 text-gray-500 text-lg placeholder:font-headingBook rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
   const initialValues = {
@@ -38,24 +41,28 @@ const ForgotPassword = () => {
           validationSchema={validationSchema}
           onSubmit={(values, { setFieldError }) => {
             setEmailVerify(values)
-            axios
-              .post(
-                'https://veo.api.almerajgroups.com/api/coaches/password/request',
-                values
-              )
-              .then((response) => {
-                Router.push('/verification')
-                setEmailVerify({ values })
-                console.log(response)
-              })
-              .catch((error) => {
-                if (error.response && error.response.data) {
-                  setFieldError('email', error.response.data.message)
-                } else {
-                  console.error(error)
-                }
-              })
-            setEmailVerify({ values })
+            if (values) {
+              setVerify(true)
+              axios
+                .post(
+                  'https://veo.api.almerajgroups.com/api/coaches/password/request',
+                  values
+                )
+                .then((response) => {
+                  localStorage.setItem('verify', JSON.stringify(values.email))
+                  console.log(response)
+                  setVerify(false)
+                  // Router.push('/otp')
+                })
+                .catch((error) => {
+                  if (error.response && error.response.data) {
+                    setFieldError('email', error.response.data.message)
+                  } else {
+                    console.error(error)
+                  }
+                  setVerify(false)
+                })
+            }
             // Router.push('/verification')
           }}
         >
@@ -83,7 +90,7 @@ const ForgotPassword = () => {
                 }}
                 type="submit"
               >
-                Send
+                {verify ? <LoaderIcon /> : 'Send'}
               </Button>
             </Form>
           )}

@@ -10,13 +10,16 @@ import MonthDropdown from '@/components/Dropdown/monthDropdown'
 import YearDropdown from '@/components/Dropdown/YearDropdown'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-// import { toast } from 'react-toastify';
+import { useEffect } from 'react'
+import LoaderIcon from '@/components/icon/LoaderIcon'
+import { toast } from 'react-toastify'
+import Router from 'next/router'
 
 const Payment = () => {
   const [debetCard, setDebetCard] = useState(true)
   const [paypal, setPaypal] = useState(false)
-  // const [month,setMonth]=useState<any>()
-  // const [year,setYear]=useState<any>()
+  const [token, setToken] = useState<any>()
+  const [verify, setVerify] = useState(false)
   const checkData = useSelector((state: any) => state.checkout)
   // const Router = useRouter()
   const styleed =
@@ -28,6 +31,11 @@ const Payment = () => {
     year: '',
     cvv: ''
   }
+  useEffect(() => {
+    const storedToken: any = localStorage.getItem('userData')
+    let obj = JSON.parse(storedToken)
+    setToken(obj)
+  }, [])
 
   return (
     <div className="flex w-full">
@@ -95,7 +103,9 @@ const Payment = () => {
           initialValues={initialValues}
           validationSchema={PaymentvalidationSchema}
           onSubmit={(values) => {
-            const storedToken: any = localStorage.getItem('Usertoken')
+            const storedToken: any = localStorage.getItem('userData')
+            let obj = JSON.parse(storedToken)
+            setToken(obj)
             const data = {
               type: debetCard ? 'stripe' : 'paypal',
               card_holder: values.card_holder,
@@ -105,39 +115,42 @@ const Payment = () => {
               cvv: values.cvv,
               price: checkData?.totalPrice,
               plan_id: checkData?.group?.id,
-              frequency: checkData?.subcription,
-              storage_plan: checkData?.storage_bandwidth,
+              frequency: checkData?.subcription?.title,
+              storage_plan: checkData?.storage_bandwidth.id,
               coach_range: checkData?.coach_range?.id,
-              addon: checkData?.addon?.map((obj: any) => obj.id)
+              addon: checkData?.addon_selected?.map((obj: any) => obj.id)
             }
             console.log(data, 'mypayment')
-            //         "type": "stripe",
-            // "card_holder": "zeeshan",
-            // "card_number": "378282246310005",
-            // "exp_month": "06",
-            // "exp_year": "2023",
-            // "cvv": "123",
-            // "price": 123,
-            // "plan_id": "5",
-            // "frequency": "monthly",
-            // "storage_plan": "1",
-            // "coach_range": "2",
-            // "addon": "1,2,3"
+
             axios.defaults.headers.common[
               'Authorization'
-            ] = `Bearer ${storedToken}`
+            ] = `Bearer ${token.token}`
+            if (data) {
+              setVerify(true)
+              axios
+                .post(
+                  'https://veo.api.almerajgroups.com/api/coaches/payment',
+                  data
+                )
+                .then((response: any) => {
+                  console.log(response)
+                  toast.success('success payment')
+                  setVerify(false)
+                  const newUpdatedUserInfo = {
+                    ...token,
+                    is_subscribed: true
+                  }
 
-            axios
-              .post(
-                'https://veo.api.almerajgroups.com/api/coaches/payment',
-                data
-              )
-              .then((response: any) => {
-                console.log(response)
-              })
-              .catch((error) => {
-                console.log(error)
-              })
+                  localStorage.setItem(
+                    'userData',
+                    JSON.stringify(newUpdatedUserInfo)
+                  )
+                  Router.push('/signin')
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            }
           }}
         >
           {({ handleSubmit, setFieldValue }) => (
@@ -146,12 +159,12 @@ const Payment = () => {
                 <Field
                   type="text"
                   id="name"
-                  name="name"
+                  name="card_holder"
                   placeholder="Name on Card"
                   className={styleed}
                 />
                 <ErrorMessage
-                  name="name"
+                  name="card_holder"
                   component="div"
                   className=" error text-red-500 text-sm font-headingBook pt-2"
                 />
@@ -223,12 +236,21 @@ const Payment = () => {
                 style={{
                   backgroundImage:
                     'linear-gradient(to right, #00FEDE, #00FDDF, #00CCFB)',
-                  marginTop: '40px'
+                  marginTop: '45px'
                 }}
                 type="submit"
               >
-                pay $
-                <span className=" font-medium">{checkData?.totalPrice}</span>
+                {verify ? (
+                  <LoaderIcon />
+                ) : (
+                  <>
+                    {' '}
+                    pay $
+                    <span className=" font-medium">
+                      {checkData?.totalPrice}
+                    </span>
+                  </>
+                )}
               </Button>
             </Form>
           )}

@@ -1,8 +1,9 @@
 import * as Yup from 'yup'
 
 export const PaymentvalidationSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
+  card_holder: Yup.string().required('Name is required'),
   cardNumber: Yup.string()
+    .max(16)
     .required('Card number is required')
     .matches(/^[0-9]{16}$/, 'Invalid card number'),
   month: Yup.string()

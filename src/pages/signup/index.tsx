@@ -11,10 +11,14 @@ import { setuserData } from '@/services/action/action'
 import { Registationvalidation } from '@/components/Validation/RegistationValidation'
 import { Formik, Field, ErrorMessage, Form } from 'formik'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
 import axios from 'axios'
+import { useState } from 'react'
+import LoaderIcon from '@/components/icon/LoaderIcon'
 const Login = () => {
   const Router = useRouter()
   const dispatch = useDispatch()
+  const [verify, setVerify] = useState(false)
   const styleed =
     'bg-[#ebf0f5] border-none h-12 text-gray-500 placeholder:font-headingBook text-md rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
   const initialValues = {
@@ -52,36 +56,46 @@ const Login = () => {
           initialValues={initialValues}
           validationSchema={Registationvalidation}
           onSubmit={(values, { setSubmitting, setFieldError }) => {
-            axios
-              .post(
-                'https://veo.api.almerajgroups.com/api/coaches/register',
-                values
-              )
-              .then((response) => {
-                localStorage.setItem('Usertoken', response.data.token)
-                dispatch(setuserData(response.data))
-                console.log(response.data.user, 'user')
-                Router.push('/verification')
-              })
-              .catch((error) => {
-                if (error.response && error.response.data) {
-                  if (error.response.status === 400) {
-                    // Handle validation errors
-                    const { errors } = error.response.data
-                    Object.keys(errors).forEach((fieldName) => {
-                      setFieldError(fieldName, errors[fieldName][0])
-                    })
-                  } else {
-                    // Handle other errors
-                    console.error(error.response.data.message)
+            if (values) {
+              setVerify(true)
+
+              axios
+                .post(
+                  'https://veo.api.almerajgroups.com/api/coaches/register',
+                  values
+                )
+                .then((response) => {
+                  if (response.data) {
+                    localStorage.setItem(
+                      'userData',
+                      JSON.stringify(response.data)
+                    )
+                    dispatch(setuserData(response.data))
+                    console.log(response.data, 'user')
+                    Router.push('/verification')
+                    setVerify(false)
+                    toast.success('success Sign up')
                   }
-                } else {
-                  console.error(error)
-                }
-              })
-
-            Router.push('/verification')
-
+                })
+                .catch((error) => {
+                  if (error.response && error.response.data) {
+                    if (error.response.status === 400) {
+                      // Handle validation errors
+                      const { errors } = error.response.data
+                      Object.keys(errors).forEach((fieldName) => {
+                        setFieldError(fieldName, errors[fieldName][0])
+                      })
+                      setVerify(false)
+                    } else {
+                      // Handle other errors
+                      console.error(error.response.data.message)
+                      setVerify(false)
+                    }
+                  } else {
+                    console.error(error)
+                  }
+                })
+            }
             setSubmitting(false)
           }}
         >
@@ -155,7 +169,7 @@ const Login = () => {
                 <ErrorMessage
                   name="password"
                   component="div"
-                  className="error text-red-500 text-sm font-headingBook pt-2"
+                  className="error text-red-500 text-sm font-sans pt-2"
                 />
               </div>
               <div className="">
@@ -179,7 +193,7 @@ const Login = () => {
                 }}
                 type="submit"
               >
-                Sign Up
+                {verify ? <LoaderIcon /> : 'Sign Up'}
               </Button>
             </Form>
           )}

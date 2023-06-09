@@ -7,12 +7,16 @@ import { Button } from '@/components/twin'
 // import FacebookIcon from '@/components/icon/FacebookIcon'
 // import GoogleIcon from '@/components/icon/GoogleIcon'
 import axios from 'axios'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 // import { Registationvalidation } from '@/components/Validation/RegistationValidation'
 import { Formik, Field, ErrorMessage, Form } from 'formik'
 import { useRouter } from 'next/router'
+import LoaderIcon from '@/components/icon/LoaderIcon'
+import * as Yup from 'yup'
 const SignIn = () => {
   const Router = useRouter()
+  const [verify, setVerify] = useState(false)
   const styleed =
     'bg-[#ebf0f5] border-none placeholder:font-headingBook h-12 text-gray-500 text-md rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
   const initialValues = {
@@ -20,6 +24,10 @@ const SignIn = () => {
     password: ''
   }
 
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().max(8).required('Password is required')
+  })
   return (
     <div className="flex w-full">
       <HeroComponent name="Sign In !" />
@@ -42,25 +50,29 @@ const SignIn = () => {
         {/* <div  className='w-full flex flex-col items-center justify-center'> */}
         <Formik
           initialValues={initialValues}
-          // validationSchema={Registationvalidation}
+          validationSchema={validationSchema}
           onSubmit={(values) => {
-            axios
-              .post(
-                'https://veo.api.almerajgroups.com/api/coaches/login',
-                values
-              )
-              .then((response: any) => {
-                toast.success('success Login')
-                console.log(response)
-                // Router.push('/checkout')
-              })
-              .catch((error: any) => {
-                if (error.response.status === 404) {
+            if (values) {
+              setVerify(true)
+
+              axios
+                .post(
+                  'https://veo.api.almerajgroups.com/api/coaches/login',
+                  values
+                )
+                .then((response: any) => {
+                  console.log(response)
+                  Router.push('/dashboard')
+
+                  toast.success('success Login')
+                  // Router.push('/checkout')
+                })
+                .catch((error: any) => {
                   toast.error(error.response.data.message)
-                }
-              })
-            console.log(values, 'sign in ')
-            // Router.push('/forgot-password')
+
+                  setVerify(false)
+                })
+            }
           }}
         >
           {({ handleSubmit }) => (
@@ -113,7 +125,7 @@ const SignIn = () => {
                 }}
                 type="submit"
               >
-                Sign Up
+                {verify ? <LoaderIcon /> : 'Sign In'}
               </Button>
             </Form>
           )}

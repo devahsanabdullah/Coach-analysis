@@ -1,13 +1,24 @@
 import HeroComponent from '@/components/HeroComponet/HeroComponent'
 import Appbar from '@/components/Appbar/Appbar'
-import React from 'react'
+import React, { useState } from 'react'
 import IsgraterIcon from '@/components/icon/IsgraterIcon'
 import { Button } from '@/components/twin'
 import { useRouter } from 'next/router'
+import { toast } from 'react-toastify'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import axios from 'axios'
+
+import DiscountLoader from '@/components/icon/DiscountLoader'
 const Checkout = () => {
+  const [discount, setDiscount] = useState<string>()
+  const [verify, setVerify] = useState(false)
+  const [showDiscount, setShowDiscount] = useState<any>()
+  const [discountValue, setDiscountValue] = useState<any>()
+  const [fixed, setFixedValue] = useState<any>()
   const Router = useRouter()
   const checkData: any = useSelector((state: any) => state.checkout)
+
   console.log(checkData)
   const styleed =
     'bg-[#ebf0f5] border-none  flex  justify-center items-center h-12 text-gray-500 text-md rounded-lg mt-5 focus:outline-none block  p-2.5 '
@@ -15,12 +26,15 @@ const Checkout = () => {
     {
       title: 'Subcription',
       subtitle: checkData?.group?.title,
-      amount: 0
+      amount:
+        checkData?.subcription?.title === 'Monthly Subscription'
+          ? checkData?.group?.monthly_price
+          : checkData?.group?.monthly_price
     },
     {
       title: 'Subcription Type',
       subtitle: checkData?.subcription?.title,
-      amount: checkData?.subcription?.price
+      amount: 0
     },
     {
       title: 'Number of Coach',
@@ -39,6 +53,53 @@ const Checkout = () => {
         : 0
     }
   ]
+  console.log(discountValue, 'value')
+  const handleDiscount = () => {
+    if (discount) {
+      setVerify(true)
+      axios
+        .get(`https://veo.api.almerajgroups.com/api/discounts/slug/${discount}`)
+        .then((response) => {
+          console.log(response.data)
+          setDiscountValue(response.data.data)
+          setVerify(false)
+          toast.success('successful Dicount Get')
+          // Router.push('/otp')
+        })
+        .catch((error) => {
+          if (error.response && error.response.data) {
+            toast.error('invalid promo code')
+          } else {
+            console.error(error)
+            toast.error('invalid promo code')
+          }
+          setVerify(false)
+        })
+    }
+  }
+  const calculateDiscountedAmount = useMemo(() => {
+    let discountedAmount = parseFloat(checkData?.totalPrice)
+
+    if (discountValue?.type === 'percentage') {
+      const discount =
+        (parseFloat(checkData?.totalPrice) * parseFloat(discountValue?.value)) /
+        100.0
+      setShowDiscount(discount)
+      discountedAmount -= discount
+    } else if (discountValue?.type === 'fixed') {
+      const fixedValue = parseFloat(discountValue?.value)
+      if (fixedValue <= parseFloat(checkData?.totalPrice)) {
+        setFixedValue(fixedValue)
+        discountedAmount -= fixedValue
+      } else {
+        discountedAmount = 0.0
+      }
+    } else {
+      discountedAmount = checkData?.totalPrice
+    }
+
+    return discountedAmount
+  }, [checkData?.totalPrice, discountValue])
 
   return (
     <div className="flex w-full">
@@ -97,10 +158,15 @@ const Checkout = () => {
           <div className={styleed}>
             <input
               type="text"
+              value={discount}
               placeholder="Enter Coupen Code"
+              onChange={(e) => setDiscount(e.target.value)}
               className="outlline-none  focus:outline-none border-none bg-transparent "
             />
-            <IsgraterIcon />
+            <div onClick={handleDiscount} className="w-7 cursor-pointer">
+              {verify ? <DiscountLoader /> : <IsgraterIcon />}
+              {/* <LoaderIcon /> */}
+            </div>
           </div>
         </div>
         <div className="w-full px-10 ">
@@ -108,15 +174,29 @@ const Checkout = () => {
             Discount %
           </h1>
           <div className="flex px-5 pt-2 pb-3 justify-between">
-            <h1 className="text-[#2C5C92] text-xl font-bold">0 %</h1>
-            <h1 className="text-black text-xl font-bold">$0</h1>
+            <h1 className="text-[#2C5C92] text-xl font-bold">
+              {discountValue
+                ? discountValue.type === 'fixed'
+                  ? `${discountValue.value}$`
+                  : `${discountValue.value}%`
+                : '0%'}
+            </h1>
+            <h1 className="text-black text-xl font-bold">
+              {discountValue
+                ? discountValue.type === 'fixed'
+                  ? fixed
+                    ? fixed
+                    : '0$'
+                  : `${parseFloat(showDiscount).toFixed(2)}$`
+                : '0%'}
+            </h1>
           </div>
           <hr className={'border-black'} />
         </div>
         <div className="flex justify-end w-full flex-col items-end px-10 mt-5">
           <h1 className="text-2xl font-headingBold">Total Amount</h1>
           <h1 className="text-[#2C5C92] text-2xl font-bold">
-            ${checkData?.totalPrice}
+            ${calculateDiscountedAmount}
           </h1>
         </div>
 

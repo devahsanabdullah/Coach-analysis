@@ -4,35 +4,50 @@ import { Button } from '../twin'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
-toast
-export default function OTP() {
+import { useSelector } from 'react-redux'
+import LoaderIcon from '../icon/LoaderIcon'
+export default function OTP({ loade }: { loade: boolean }) {
   const [otp, setOtp] = useState('')
-  const [token, setToken] = useState('')
+  const [token, setToken] = useState<any>()
+  const [verify, setVerify] = useState(false)
   const Router = useRouter()
+  const user = useSelector((state: any) => state.userData)
   useEffect(() => {
-    const storedToken: any = localStorage.getItem('Usertoken')
+    const storedToken: any = localStorage.getItem('userData')
+    let obj = JSON.parse(storedToken)
 
-    setToken(storedToken)
-  }, [])
+    setToken(obj)
+  }, [user, loade])
 
   const handleSendOtp = () => {
-    console.log(otp, 'ooodsodosoppp')
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    axios
-      .post('https://veo.api.almerajgroups.com/api/coaches/verify-otp', {
-        otp: otp
-      })
-      .then((response: any) => {
-        toast.success('success verify otp')
-        console.log(response)
-        Router.push('/checkout')
-      })
-      .catch((error: any) => {
-        if (error.response.status === 404) {
-          toast.error(error.response.data.message)
-          setOtp('')
-        }
-      })
+    if (otp) {
+      setVerify(true)
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token.token}`
+      axios
+        .post('https://veo.api.almerajgroups.com/api/coaches/verify-otp', {
+          otp: otp
+        })
+        .then((response: any) => {
+          toast.success('success verify otp')
+          console.log(response)
+          setVerify(false)
+          const newUpdatedUserInfo = {
+            ...token,
+            is_verified: true
+          }
+
+          localStorage.setItem('userData', JSON.stringify(newUpdatedUserInfo))
+          Router.push('/checkout')
+        })
+        .catch((error: any) => {
+          if (error.response.status === 404) {
+            toast.error(error.response.data.message)
+            setVerify(false)
+            setOtp('')
+          }
+        })
+    }
   }
   return (
     <>
@@ -62,7 +77,7 @@ export default function OTP() {
         type="submit"
         onClick={handleSendOtp}
       >
-        Verify
+        {verify ? <LoaderIcon /> : 'Verify'}
       </Button>
     </>
   )

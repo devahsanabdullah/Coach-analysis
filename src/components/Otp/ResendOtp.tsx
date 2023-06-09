@@ -1,34 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import OtpInput from 'react-otp-input'
 import { Button } from '../twin'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import LoaderIcon from '../icon/LoaderIcon'
 // import { useRouter } from 'next/router'
 toast
 export default function ResendOtp() {
   const [otp, setOtp] = useState('')
-  //   const [token, setToken] = useState('')
-  //   const Router = useRouter()
-  //   useEffect(() => {
-  //     const storedToken: any = localStorage.getItem('Usertoken')
-
-  //     setToken(storedToken)
-  //   }, [])
+  const [verify, setVerify] = useState(false)
+  const [user, setUser] = useState<any>()
+  useEffect(() => {
+    const storedToken: any = localStorage.getItem('userData')
+    let obj = JSON.parse(storedToken)
+    setUser(obj)
+  }, [])
 
   const handleSendOtp = () => {
-    console.log(otp)
-    axios
-      .post('https://veo.api.almerajgroups.com/api/coaches/verify-otp', { otp })
-      .then((response: any) => {
-        toast.success('success verify otp')
-        console.log(response)
-      })
-      .catch((error: any) => {
-        if (error.response.status === 404) {
-          toast.error(error.response.data.message)
-          setOtp('')
-        }
-      })
+    axios.defaults.headers.common['Authorization'] = `Bearer ${user?.token}`
+    if (user?.token) {
+      setVerify(true)
+      axios
+        .post('https://veo.api.almerajgroups.com/api/coaches/verify-otp', {
+          otp,
+          email: user.coach.email
+        })
+        .then((response: any) => {
+          toast.success('success verify otp')
+          setVerify(false)
+          console.log(response)
+        })
+        .catch((error: any) => {
+          if (error.response.status === 404) {
+            toast.error(error.response.data.message)
+            setOtp('')
+          }
+          setVerify(false)
+        })
+    }
   }
   return (
     <>
@@ -58,7 +67,7 @@ export default function ResendOtp() {
         type="submit"
         onClick={handleSendOtp}
       >
-        Verify
+        {verify ? <LoaderIcon /> : 'Verify'}
       </Button>
     </>
   )
