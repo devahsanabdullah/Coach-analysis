@@ -15,9 +15,11 @@ function App({ Component, pageProps }: AppProps) {
     const userInfo: any = localStorage.getItem('userData')
     let obj = JSON.parse(userInfo)
     if (obj?.is_verified === true) {
-      router.push('/verification')
-    } else if (obj?.is_verified === true && obj?.is_subscribed === true) {
-      router.push('/signin')
+      if (obj?.is_verified === true && obj?.is_subscribed === true) {
+        router.push('/signin')
+      } else {
+        router.push('/verification')
+      }
     } else {
       router.push('/')
     }

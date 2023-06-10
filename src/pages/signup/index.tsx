@@ -72,8 +72,11 @@ const Login = () => {
                     )
                     dispatch(setuserData(response.data))
                     console.log(response.data, 'user')
-                    Router.push('/verification')
+
                     setVerify(false)
+                    if (response.data.status === 'success') {
+                      Router.push('/verification')
+                    }
                     toast.success('success Sign up')
                   }
                 })

@@ -29,7 +29,7 @@ export default function OTP({ loade }: { loade: boolean }) {
           otp: otp
         })
         .then((response: any) => {
-          toast.success('success verify otp')
+          // toast.success('success verify otp')
           console.log(response)
           setVerify(false)
           const newUpdatedUserInfo = {
@@ -38,7 +38,9 @@ export default function OTP({ loade }: { loade: boolean }) {
           }
 
           localStorage.setItem('userData', JSON.stringify(newUpdatedUserInfo))
-          Router.push('/checkout')
+          if (response.data.status === 'success') {
+            Router.push('/checkout')
+          }
         })
         .catch((error: any) => {
           if (error.response.status === 404) {

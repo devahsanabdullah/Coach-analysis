@@ -3,9 +3,8 @@ import * as Yup from 'yup'
 export const PaymentvalidationSchema = Yup.object().shape({
   card_holder: Yup.string().required('Name is required'),
   cardNumber: Yup.string()
-    .max(16)
     .required('Card number is required')
-    .matches(/^[0-9]{16}$/, 'Invalid card number'),
+    .matches(/^[0-9]{14,16}$|^[0-9]{19}$/, 'Invalid card number'),
   month: Yup.string()
     .required('Month is required')
     .matches(/^(0[1-9]|1[0-2])$/, 'Invalid month'),
@@ -25,5 +24,5 @@ export const PaymentvalidationSchema = Yup.object().shape({
     }),
   cvv: Yup.string()
     .required('CVV is required')
-    .matches(/^\d{3}$/, 'CVV must be  3-digit number')
+    .matches(/^\d{3,4}$/, 'CVV must be a 3 or 4-digit number')
 })

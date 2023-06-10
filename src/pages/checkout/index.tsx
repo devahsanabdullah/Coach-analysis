@@ -7,9 +7,11 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
 import DiscountLoader from '@/components/icon/DiscountLoader'
+import { checkoutAmount } from '@/services/action/action'
 const Checkout = () => {
   const [discount, setDiscount] = useState<string>()
   const [verify, setVerify] = useState(false)
@@ -17,6 +19,7 @@ const Checkout = () => {
   const [discountValue, setDiscountValue] = useState<any>()
   const [fixed, setFixedValue] = useState<any>()
   const Router = useRouter()
+  const dispatch = useDispatch()
   const checkData: any = useSelector((state: any) => state.checkout)
 
   console.log(checkData)
@@ -28,20 +31,20 @@ const Checkout = () => {
       subtitle: checkData?.group?.title,
       amount:
         checkData?.subcription?.title === 'Monthly Subscription'
-          ? checkData?.group?.monthly_price
-          : checkData?.group?.monthly_price
+          ? `$${checkData?.group?.monthly_price}`
+          : `$${checkData?.group?.monthly_price}`
     },
     {
       title: 'Subcription Type',
       subtitle: checkData?.subcription?.title,
-      amount: 0
+      amount: ''
     },
     {
       title: 'Number of Coach',
       subtitle: checkData?.coach_range
         ? checkData?.coach_range.value
         : checkData?.group?.default_coach_range,
-      amount: checkData?.coach_range ? checkData.coach_range.price : 0
+      amount: checkData?.coach_range ? `$${checkData.coach_range.price}` : '$0'
     },
     {
       title: 'Data Storage',
@@ -50,10 +53,10 @@ const Checkout = () => {
         : `${checkData?.group?.default_storage_range} Gb`,
       amount: checkData?.storage_bandwidth?.bandwidth
         ? checkData?.storage_bandwidth.price
-        : 0
+        : '$0'
     }
   ]
-  console.log(discountValue, 'value')
+
   const handleDiscount = () => {
     if (discount) {
       setVerify(true)
@@ -77,7 +80,7 @@ const Checkout = () => {
         })
     }
   }
-  const calculateDiscountedAmount = useMemo(() => {
+  const calculateDiscountedAmount: any = useMemo(() => {
     let discountedAmount = parseFloat(checkData?.totalPrice)
 
     if (discountValue?.type === 'percentage') {
@@ -88,18 +91,31 @@ const Checkout = () => {
       discountedAmount -= discount
     } else if (discountValue?.type === 'fixed') {
       const fixedValue = parseFloat(discountValue?.value)
-      if (fixedValue <= parseFloat(checkData?.totalPrice)) {
-        setFixedValue(fixedValue)
+      if (fixedValue <= discountedAmount) {
+        setFixedValue(fixedValue.toFixed(2))
         discountedAmount -= fixedValue
       } else {
         discountedAmount = 0.0
       }
     } else {
-      discountedAmount = checkData?.totalPrice
+      discountedAmount = parseFloat(checkData?.totalPrice)
     }
 
     return discountedAmount
   }, [checkData?.totalPrice, discountValue])
+
+  // useEffect(() => {
+  //   const data = { ...checkData, totalPrice: calculateDiscountedAmount }
+  //   dispatch(checkoutAmount(data))
+  // }, [calculateDiscountedAmount])
+
+  const handleCheckout = () => {
+    const data = { ...checkData, totalPrice: calculateDiscountedAmount }
+    if (calculateDiscountedAmount) {
+      dispatch(checkoutAmount(data))
+      Router.push('/payment')
+    }
+  }
 
   return (
     <div className="flex w-full">
@@ -121,7 +137,7 @@ const Checkout = () => {
                     {item.subtitle}
                   </h1>
                   <h1 className="text-black text-xl font-bold">
-                    ${item.amount}
+                    {item.amount}
                   </h1>
                 </div>
                 <hr />
@@ -196,11 +212,11 @@ const Checkout = () => {
         <div className="flex justify-end w-full flex-col items-end px-10 mt-5">
           <h1 className="text-2xl font-headingBold">Total Amount</h1>
           <h1 className="text-[#2C5C92] text-2xl font-bold">
-            ${calculateDiscountedAmount}
+            ${parseFloat(calculateDiscountedAmount).toFixed(2)}
           </h1>
         </div>
 
-        <Button onClick={() => Router.push('/payment')}>Checkout</Button>
+        <Button onClick={handleCheckout}>Checkout</Button>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import HeroComponent from '@/components/HeroComponet/HeroComponent'
-import Appbar from '@/components/Appbar/Appbar'
+// import Appbar from '@/components/Appbar/Appbar'
 import React from 'react'
 import { Button } from '@/components/twin'
 // import LineIcon from '@/components/icon/LineIcon'
@@ -32,7 +32,15 @@ const SignIn = () => {
     <div className="flex w-full">
       <HeroComponent name="Sign In !" />
       <div className="flex flex-col items-center md:w-2/3 w-full  pb-5 overflow-y-auto ml-auto ">
-        <Appbar route={'/'} />
+        <div className="mt-10 w-full flex justify-between items-center font-headingBook text-[#2c5c92]">
+          <div>{/* <BackIcon /> */}</div>
+          <div className="flex">
+            <h1>Home</h1>
+            <div className=" border-r  h-5 mx-2 mt-1  border-black "></div>
+            <h1>How its work</h1>
+          </div>
+          <div></div>
+        </div>
         <div className="my-5 text-center">
           <h1 className="text-4xl font-headingBold">Welcome Back!</h1>
           <h1 className="text-xl font-headingBook my-2">

@@ -10,7 +10,7 @@ const Verification = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoader(false)
-    }, 8000)
+    }, 5000)
   }, [])
 
   return (

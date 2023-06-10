@@ -10,7 +10,7 @@ import axios from 'axios'
 import Router from 'next/router'
 import { useDispatch } from 'react-redux'
 import { Formik, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+// import * as Yup from 'yup'
 import { checkoutAmount } from '@/services/action/action'
 import Loader from '../Loader/Loader'
 
@@ -31,10 +31,10 @@ const Subcription = () => {
   // const [club, setcClub] = useState()
   const [feature, setFeature] = useState<any>()
   const [addonsTotal, setAddonsTotal] = useState<any>()
-  const validationSchema = Yup.object().shape({
-    coach_range: Yup.string(),
-    storage: Yup.string().required('storage field is required')
-  })
+  // const validationSchema = Yup.object().shape({
+  //   coach_range: Yup.string(),
+  //   storage: Yup.string().required('storage field is required')
+  // })
   const dispatch = useDispatch()
   useEffect(() => {
     // const data = {
@@ -162,7 +162,7 @@ const Subcription = () => {
       <div className="w-full">
         <Formik
           initialValues={{ coach_range: '', storage: '', group: false }}
-          validationSchema={validationSchema}
+          // validationSchema={validationSchema}
           onSubmit={() => {
             const data = {
               storage_bandwidth: storage,
@@ -226,7 +226,7 @@ const Subcription = () => {
                 </div>
                 <div className="flex md:w-1/2 w-full mx-10 md:mx-0 mt-8 text-[#2C5C92]">
                   <h1 className="text-4xl font-extrabold items-start ">
-                    ${totalPrice ? totalPrice : 0}
+                    ${totalPrice ? parseFloat(totalPrice).toFixed(1) : 0}
                   </h1>
                   <p className="text-lg  flex justify-end font-headingBook items-end">
                     /
@@ -311,11 +311,11 @@ const Subcription = () => {
                     setStorage={setStorage}
                   />
                 </div>
-                <ErrorMessage
+                {/* <ErrorMessage
                   name="storage"
                   component="div"
                   className="error text-red-500 "
-                />
+                /> */}
                 <Button
                   style={{
                     backgroundImage:

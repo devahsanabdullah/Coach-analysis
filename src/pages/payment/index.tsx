@@ -148,6 +148,7 @@ const Payment = () => {
                   Router.push('/signin')
                 })
                 .catch((error) => {
+                  setVerify(false)
                   console.log(error)
                 })
             }
@@ -247,7 +248,7 @@ const Payment = () => {
                     {' '}
                     pay $
                     <span className=" font-medium">
-                      {checkData?.totalPrice}
+                      {parseFloat(checkData?.totalPrice).toFixed(2)}
                     </span>
                   </>
                 )}
