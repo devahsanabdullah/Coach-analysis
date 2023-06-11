@@ -18,7 +18,7 @@ function App({ Component, pageProps }: AppProps) {
       if (obj?.is_verified === true && obj?.is_subscribed === true) {
         router.push('/signin')
       } else {
-        router.push('/verification')
+        router.push('/')
       }
     } else {
       router.push('/')

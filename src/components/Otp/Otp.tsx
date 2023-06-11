@@ -39,7 +39,17 @@ export default function OTP({ loade }: { loade: boolean }) {
 
           localStorage.setItem('userData', JSON.stringify(newUpdatedUserInfo))
           if (response.data.status === 'success') {
-            Router.push('/checkout')
+            const userInfo: any = localStorage.getItem('userData')
+            let obj = JSON.parse(userInfo)
+            if (
+              (obj?.is_verified === true && user != null) ||
+              undefined ||
+              ''
+            ) {
+              Router.push('/checkout')
+            } else {
+              Router.push('/')
+            }
           }
         })
         .catch((error: any) => {

@@ -10,8 +10,10 @@ import * as Yup from 'yup'
 import { setEmailVerify } from '@/services/action/action'
 import LoaderIcon from '@/components/icon/LoaderIcon'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 const ForgotPassword = () => {
   const [verify, setVerify] = useState(false)
+  const Router = useRouter()
   // const Router = useRouter()
   const styleed =
     'bg-[#ebf0f5] border-none h-12 text-gray-500 text-lg placeholder:font-headingBook rounded-lg mt-5 focus:outline-none block w-96 p-2.5 '
@@ -52,7 +54,7 @@ const ForgotPassword = () => {
                   localStorage.setItem('verify', JSON.stringify(values.email))
                   console.log(response)
                   setVerify(false)
-                  // Router.push('/otp')
+                  Router.push('/otp')
                 })
                 .catch((error) => {
                   if (error.response && error.response.data) {

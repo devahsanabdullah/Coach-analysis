@@ -22,6 +22,7 @@ const Subcription = () => {
   const [storagePlan, setStoragePlan] = useState([])
   const [addons, setAddons] = useState([])
   const [storage, setStorage] = useState<any>()
+  const [localData, setLocalData] = useState<any>()
   const [addSeclect, setAddSelected] = useState<any>([])
   const [subcript, setSubcription] = useState({
     title: 'Monthly Subscription',
@@ -37,13 +38,9 @@ const Subcription = () => {
   // })
   const dispatch = useDispatch()
   useEffect(() => {
-    // const data = {
-    //   storage_bandwidth: storage,
-    //   addon_selected: addSeclect,
-    //   subcription: subcript,
-    //   coach_range: coach,
-    //   club_name: club
-    // }
+    const userInfo: any = localStorage.getItem('userData')
+    let obj = JSON.parse(userInfo)
+    setLocalData(obj)
 
     getUser()
   }, [])
@@ -173,8 +170,16 @@ const Subcription = () => {
               totalPrice: totalPrice
             }
             dispatch(checkoutAmount(data))
-            console.log(data, 'somethig')
-            Router.push('/signup')
+
+            if (localData?.is_verified === false) {
+              Router.push('/verification')
+            } else {
+              if (localData?.is_verified === true) {
+                Router.push('/checkout')
+              } else {
+                Router.push('/signup')
+              }
+            }
           }}
         >
           {({ handleSubmit, setFieldValue }) => (
